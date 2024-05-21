@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="/static/css/band_card.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="card text-center band-card shadow m-2" title="{{ band.description }}">
+        <img src="{{ band.logo }}" class="card-img-top" alt="{{ band.title }}">
+        <h5 class="card-title">{{ band.title }}</h5>
+    </div>
+    <p class="m-2">{{ band.description }}</p>
+{% endblock %}
