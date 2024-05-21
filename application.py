@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 
+from Album import all_discography
 from Band import all_bands
 from Page import current_page_title, all_pages, Page
 
@@ -33,5 +34,7 @@ def band_page(band_code):
     return render_template('band_page.html',
                            title=band.title,
                            band=band,
+                           discography=sorted(all_discography[band.code], key=lambda album: album.released,
+                                              reverse=True),
                            nav_current='band',
-                           nav_items=all_pages + (Page('band', band.title, '#'),))
+                           nav_items=all_pages + (Page('band', band.title, '/band/' + band.code),))

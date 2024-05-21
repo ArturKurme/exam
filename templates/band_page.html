@@ -3,9 +3,24 @@
     <link href="/static/css/band_card.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
-    <div class="card text-center band-card shadow m-2" title="{{ band.description }}">
-        <img src="{{ band.logo }}" class="card-img-top" alt="{{ band.title }}">
-        <h5 class="card-title">{{ band.title }}</h5>
+    <div class="row">
+        <div class="card text-center band-card shadow m-2 col-6" title="{{ band.description }}">
+            <img src="{{ band.logo }}" class="card-img-top" alt="{{ band.title }}">
+            <h5 class="card-title">{{ band.title }}</h5>
+        </div>
     </div>
-    <p class="m-2">{{ band.description }}</p>
+    <div class="row">
+        <div class="m-2 col-6">{{ band.description }}</div>
+    </div>
+    <div class="row">
+        <div class="col-6 h5">
+            Discography:
+        </div>
+    </div>
+    {% for album in discography %}
+        <div class="row">
+            <div class="col-1 text-end">{{ album.year }}</div>
+            <div class="col-5">{{ album.title }}</div>
+        </div>
+    {% endfor %}
 {% endblock %}
