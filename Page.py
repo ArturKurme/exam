@@ -7,7 +7,7 @@ class Page:
 
 all_pages = (
     Page('home', 'Home', '/home'),
-    Page('artists', 'Bands', '/artists'),
+    Page('bands', 'Bands', '/bands'),
 )
 
 

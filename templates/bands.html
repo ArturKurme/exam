@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block css %}
+    <link href="/static/css/band_card.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="container-sm d-flex flex-row flex-wrap justify-content-between">
+        <div class="card band-card shadow m-2">
+            <img src="/static/images/system_of_down_logo.jpg" class="card-img-top" alt="System of Down">
+            <h5 class="card-title">System of Down</h5>
+        </div>
+        <div class="card band-card shadow m-2">
+            <img src="/static/images/metallica_logo.jpg" class="card-img-top" alt="Metallica">
+            <h5 class="card-title">Metallica</h5>
+        </div>
+        <div class="card band-card shadow m-2">
+            <img src="/static/images/scorpions_logo.jpg" class="card-img-top" alt="Scorpions">
+            <h5 class="card-title">Scorpions</h5>
+        </div>
+        <div class="card band-card shadow m-2">
+            <img src="/static/images/acdc_logo.jpg" class="card-img-top" alt="AC/DC">
+            <h5 class="card-title">AC/DC</h5>
+        </div>
+    </div>
+{% endblock %}

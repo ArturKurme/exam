@@ -16,10 +16,10 @@ def main():
                            nav_items=all_pages)
 
 
-@app.route("/artists")
+@app.route("/bands")
 def artists():
-    nav_current = 'artists'
-    return render_template('main.html',
+    nav_current = 'bands'
+    return render_template('bands.html',
                            title=current_page_title(nav_current),
                            nav_current=nav_current,
                            nav_items=all_pages)
