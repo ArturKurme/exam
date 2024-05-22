@@ -1,15 +1,10 @@
-code,released,name
-kill_em_all,1983-07-25,Kill 'Em All
-ride_the_lightning,1984-07-27,Ride the Lightning
-master_of_puppets,1986-03-03,Master of Puppets
-and_justice_for_all,1988-09-07,...And Justice for All
-metallica,1991-08-12,Metallica
-load,1996-06-04,Load
-reload,1997-11-18,Reload
-st_anger,2003-06-05,St. Anger
-death_magnetic,2008-09-12,Death Magnetic
-72_seasons,2023-04-14,72 Seasons
-hardwired_to_self-destruct,2016-11-18,Hardwired... to Self-Destruct
+code,released,name,description
+kill_em_all,1983-07-25,Kill 'Em All,"Kill 'Em All is the debut studio album by the American heavy metal band Metallica, released on July 25, 1983, through the independent label Megaforce Records. After forming in 1981, Metallica began by playing shows in local clubs in Los Angeles."
+ride_the_lightning,1984-07-27,Ride the Lightning,"Ride the Lightning is the second studio album by the American heavy metal band Metallica, released on July 27, 1984, by the independent record label Megaforce Records. The album was recorded in three weeks with producer Flemming Rasmussen at Sweet Silence Studios in Copenhagen, Denmark."
+master_of_puppets,1986-03-03,Master of Puppets,"Master of Puppets is the third studio album by the American heavy metal band Metallica, released on March 3, 1986, by Elektra Records.[1] Recorded in Copenhagen, Denmark at Sweet Silence Studios with producer Flemming Rasmussen, it was the band's final album to feature bassist Cliff Burton, who died in a bus accident in Sweden during the album's promotional tour."
+metallica,1991-08-12,Metallica,"Metallica (commonly known as The Black Album) is the fifth studio album by American heavy metal band Metallica. It was released on August 12, 1991, by Elektra Records. Recording sessions took place at One on One Recording Studios in Los Angeles over an eight-month span that frequently found Metallica at odds with their new producer Bob Rock. The album marked a change in the band's music from the thrash metal style of their previous four albums to a slower, heavier, and more refined sound."
+72_seasons,2023-04-14,72 Seasons,"72 Seasons is the eleventh studio album by American heavy metal band Metallica, released on April 14, 2023, by their own record label Blackened Recordings. 72 Seasons was produced by Greg Fidelman, who produced the band's previous studio album, Hardwired... to Self-Destruct (2016), and is the band's second studio album to be released through Blackened."
+
 
 
 

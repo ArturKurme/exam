@@ -5,14 +5,20 @@ from datetime import date
 
 
 class Album:
-    def __init__(self, code, released, title):
+    def __init__(self, code, released, title, description=''):
         self.code = code
         self.released = released
         self.title = title
+        self.description = description
 
     @property
     def year(self):
         return self.released.year
+
+    @property
+    def cover(self):
+        paths = glob.glob('static/images/' + self.code + '_cover.*')
+        return '/static/images/' + (os.path.basename(paths[0]) if paths else 'no_image.jpg')
 
 
 def read_discography():
@@ -29,8 +35,9 @@ def read_discography():
                         title = row['name']
                         released = date.fromisoformat(row['released'])
                         if code and title:
-                            album = Album(code, released, title)
+                            album = Album(code, released, title, row['description'])
                             discography[band].append(album)
+                            album.cover
                     except Exception as ex:
                         print(f"${type(ex)}: {ex} path: {path} {row}")
         except Exception as ex:
