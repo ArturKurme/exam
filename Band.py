@@ -20,4 +20,12 @@ class Band:
         return '/band/' + self.code
 
 
-all_bands = {band.code: band for band in [Band(path) for path in glob.glob("data/bands/*.json")]}
+def read_all_bands():
+    for path in glob.glob("data/bands/*.json"):
+        try:
+            yield Band(path)
+        except Exception as ex:
+            print(f"${type(ex)}: ${ex} path: ${path}")
+
+
+all_bands = {band.code: band for band in read_all_bands()}

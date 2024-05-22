@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for, redirect
 from flask import render_template
 
 from Album import all_discography
@@ -30,11 +30,18 @@ def bands():
 
 @app.route("/band/<band_code>")
 def band_page(band_code):
-    band = all_bands[band_code]
+    try:
+        band = all_bands[band_code]
+    except KeyError:
+        return redirect(url_for('bands'))
+    try:
+        discography = all_discography[band.code]
+    except KeyError:
+        discography = []
+
     return render_template('band_page.html',
                            title=band.title,
                            band=band,
-                           discography=sorted(all_discography[band.code], key=lambda album: album.released,
-                                              reverse=True),
+                           discography=sorted(discography, key=lambda album: album.released, reverse=True),
                            nav_current='band',
                            nav_items=all_pages + (Page('band', band.title, '/band/' + band.code),))
