@@ -1,15 +1,15 @@
 import glob
 import json
 
+from Item import Item
 
-class Band:
+
+class Band(Item):
 
     def __init__(self, file_name):
         with open(file_name, encoding='utf-8') as f:
             obj = json.load(f)
-        self.code = obj['code']
-        self.title = obj['title']
-        self.description = obj['description']
+        super().__init__(obj['code'], obj['title'], obj['description'])
 
     @property
     def logo(self):

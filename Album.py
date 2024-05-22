@@ -3,13 +3,14 @@ import glob
 import os
 from datetime import date
 
+from Item import Item
 
-class Album:
+
+class Album(Item):
+
     def __init__(self, code, released, title, description=''):
-        self.code = code
+        super().__init__(code, title, description)
         self.released = released
-        self.title = title
-        self.description = description
 
     @property
     def year(self):
