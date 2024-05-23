@@ -16,8 +16,9 @@
                         <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
                     </div>
                     <div class="col-8">
-                        <div>{{ album.year }}</div>
                         <div>{{ album.title }}</div>
+                        <div>Year: {{ album.year }}</div>
+                        <div>Length: {{ album.length }}</div>
                     </div>
                 </div>
             {% endfor %}
