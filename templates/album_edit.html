@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="p-2">
+        <form method="post" action="/save-album" enctype="multipart/form-data">
+            <input type="hidden" name="band" value="{{ band.code }}">
+            <input type="hidden" name="album" value="{{ album.code }}">
+            <div class="row p-2 col-12">
+                <div class="col-3 text-end">
+                    <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
+                </div>
+                <div class="col-9">
+                    <div class="h5">{{ band.title }}</div>
+                    <div class="mb-3">
+                        <label for="album-title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="album-title" name="title" value="{{ album.title }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-released" class="form-label">Released</label>
+                        <input type="date" class="form-control" id="album-released" name="released"
+                               value="{{ album.released }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-description" class="form-label">Album description</label>
+                        <textarea class="form-control" id="album-description" name="description"
+                                  rows="3">{{ album.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="album-cover" class="form-label">Album cover</label>
+                        <input class="form-control" type="file" id="album-cover" name="cover">
+                    </div>
+                </div>
+            </div>
+            <div class="row p-2 col-12">
+                <div class="mb-3">
+                    <label for="album-tracks" class="form-label">Tracks</label>
+                    <textarea class="form-control" id="album-tracks" name="tracks"
+                              placeholder="example: 1. tack name 2:35"
+                              rows="{{ [[album.tracks|length, 12]|min, 6]|max }}">{{ tracks }}</textarea>
+                </div>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </form>
+    </div>
+{% endblock %}

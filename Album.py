@@ -1,9 +1,12 @@
 import csv
 import glob
 import os
+import re
 from datetime import date, timedelta
 
+from PIL import Image
 from pytimeparse.timeparse import timeparse
+from werkzeug.utils import secure_filename
 
 from Item import Item
 
@@ -42,14 +45,33 @@ class Album(Item):
     @property
     def length(self):
         total_seconds = int(self.duration.total_seconds())
-        return f'{int(total_seconds / 60) % 60}:{total_seconds % 60:02}'
+        return f'{int(total_seconds / 60)}:{total_seconds % 60:02}'
+
+
+def save_cover(album_code, cover_file):
+    file_name, file_extension = os.path.splitext(secure_filename(cover_file.filename))
+    file_extension = file_extension.lower()
+    file_name = f'static/images/{album_code}_cover{file_extension}'
+    cover_file.save(file_name)
+
+    with Image.open(file_name) as image:
+        image.thumbnail((220, 220), Image.Resampling.LANCZOS)
+        file_name = f'static/images/{album_code}_cover.png'
+        image.save(file_name, "PNG")
+
+    file_name = glob.glob(file_name)[0]
+    for path in glob.glob(f'static/images/{album_code}_cover.*'):
+        if path != file_name:
+            try:
+                os.remove(path)
+            except (PermissionError, IOError):
+                pass
 
 
 def read_tracks(code):
     tracks = []
     for path in glob.glob('data/albums/' + code + '.csv'):
         try:
-            band = os.path.splitext(os.path.basename(path))[0]
             with open("data/albums/" + code + ".csv", encoding='utf-8', newline='') as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=',')
                 for row in reader:
@@ -66,29 +88,69 @@ def read_tracks(code):
     return tracks
 
 
+def write_tracks(code, tracks):
+    with open('data/albums/' + code + '.csv', 'w', encoding='utf-8', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(('title', 'length'))
+        for track in tracks:
+            writer.writerow((track.title, track.length))
+
+
+def parse_released(text):
+    return date.fromisoformat(text.strip())
+
+
 def read_discography():
     discography = {}
     for path in glob.glob("data/discography/*.csv"):
         try:
-            band = os.path.splitext(os.path.basename(path))[0]
+            band_code = os.path.splitext(os.path.basename(path))[0]
             with open(path, encoding='utf-8', newline='') as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=',')
-                discography[band] = []
+                discography[band_code] = []
                 for row in reader:
                     try:
                         code = row['code']
                         title = row['name']
-                        released = date.fromisoformat(row['released'])
+                        released = parse_released(row['released'])
                         if code and title:
                             album = Album(code, released, title, row['description'])
                             album.tracks = read_tracks(code)
-                            discography[band].append(album)
+                            discography[band_code].append(album)
                     except Exception as ex:
                         print(f"${type(ex)}: {ex} path: {path} {row}")
+
         except Exception as ex:
             print(f"${type(ex)}: {ex} path: {path}")
 
     return discography
+
+
+def write_albums(band_code):
+    with open('data/discography/' + band_code + '.csv', 'w', encoding='utf-8', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(('code', 'released', 'name', 'description'))
+        for album in all_discography[band_code]:
+            writer.writerow((album.code, album.released.isoformat(), album.title, album.description))
+
+
+def save_album(band_code, album):
+    write_tracks(album.code, album.tracks)
+    write_albums(band_code)
+
+
+def get_album(band_code, album_code):
+    return next(a for a in all_discography[band_code] if album_code == a.code)
+
+
+track_line_regex = re.compile(r'^(\d+)\.\s*(.+)\s+(\d+:\d{2})$')
+
+
+def parse_tracks(text):
+    return [e[1] for e in sorted(
+        [(int(match.group(1)), Track(match.group(2), timedelta(seconds=timeparse(match.group(3)))))
+         for match in [track_line_regex.fullmatch(line.strip()) for line in text.split('\n')] if match],
+        key=lambda e: e[0])]
 
 
 all_discography = read_discography()
