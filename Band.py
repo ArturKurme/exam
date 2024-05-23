@@ -15,10 +15,6 @@ class Band(Item):
     def logo(self):
         return '/static/images/' + self.code + '_logo.jpg'
 
-    @property
-    def href(self):
-        return '/band/' + self.code
-
 
 def read_all_bands():
     for path in glob.glob("data/bands/*.json"):

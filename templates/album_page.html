@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="p-2">
+        <div class="row p-2 col-12">
+            <div class="col-3 text-end">
+                <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
+            </div>
+            <div class="col-9">
+                <div class="h5">{{ band.title }}</div>
+                <div class="h4">{{ album.title }}</div>
+                <div>{{ album.year }}</div>
+            </div>
+        </div>
+        <div class="row p-2 col-12">
+            {% for track in album.tracks %}
+                <div class="row p-1">
+                    <div class="col-1 text-end">{{ loop.index }}.</div>
+                    <div class="col-8">{{ track.title }}</div>
+                    <div class="col-3 text-end">{{ track.length }}</div>
+                </div>
+            {% endfor %}
+            <div class="row p-1">
+                <div class="col-12 text-end">Total length: {{ album.length }}</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

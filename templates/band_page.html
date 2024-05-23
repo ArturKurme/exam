@@ -11,16 +11,18 @@
         <div class="h5"> Discography:</div>
         <div>
             {% for album in discography %}
-                <div class="row p-1" title="{{ album.description }}">
-                    <div class="col-4 text-end">
-                        <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
+                <a class="col-12 text-dark" href="{{ '/album/' + band.code + '/' + album.code }}">
+                    <div class="row p-1" title="{{ album.description }}">
+                        <div class="col-4 text-end">
+                            <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
+                        </div>
+                        <div class="col-8">
+                            <div>{{ album.title }}</div>
+                            <div>Year: {{ album.year }}</div>
+                            <div>Length: {{ album.length }}</div>
+                        </div>
                     </div>
-                    <div class="col-8">
-                        <div>{{ album.title }}</div>
-                        <div>Year: {{ album.year }}</div>
-                        <div>Length: {{ album.length }}</div>
-                    </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     </div>

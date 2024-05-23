@@ -5,7 +5,7 @@
 {% block content %}
     <div class="container-sm d-flex flex-row flex-wrap justify-content-between">
         {% for band in bands %}
-            <a class="card text-center band-card shadow m-2" title="{{ band.description }}" href="{{ band.href }}">
+            <a class="card text-center band-card shadow m-2" title="{{ band.description }}" href="{{ '/band/' + band.code }}">
                 <img src="{{ band.logo }}" class="card-img-top" alt="{{ band.title }}">
                 <h5 class="card-title">{{ band.title }}</h5>
             </a>

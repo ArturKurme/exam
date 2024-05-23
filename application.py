@@ -45,3 +45,24 @@ def band_page(band_code):
                            discography=sorted(discography, key=lambda album: album.released, reverse=True),
                            nav_current='band',
                            nav_items=all_pages + (Page('band', band.title, '/band/' + band.code),))
+
+
+@app.route("/album/<band_code>/<album_code>")
+def album_page(band_code, album_code):
+    try:
+        band = all_bands[band_code]
+    except KeyError:
+        return redirect(url_for('bands'))
+    try:
+        album = next(a for a in all_discography[band.code] if album_code == a.code)
+    except (KeyError, StopIteration):
+        return redirect(url_for('band_page', band_code=band_code))
+
+    return render_template('album_page.html',
+                           title=album.title,
+                           band=band,
+                           album=album,
+                           nav_current='album',
+                           nav_items=all_pages + (Page('band', band.title, '/band/' + band.code),
+                                                  Page('album', f'{album.title} ({album.year})',
+                                                       '/album/' + band.code + '/' + album_code)))
