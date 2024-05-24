@@ -24,7 +24,7 @@ class Track:
 
 class Album(Item):
 
-    def __init__(self, code, released, title, description=''):
+    def __init__(self, code, released=date(1970, 1, 1), title='', description=''):
         super().__init__(code, title, description)
         self.released = released
         self.tracks = []
@@ -107,7 +107,7 @@ def read_discography():
             band_code = os.path.splitext(os.path.basename(path))[0]
             with open(path, encoding='utf-8', newline='') as csv_file:
                 reader = csv.DictReader(csv_file, delimiter=',')
-                discography[band_code] = []
+                discography[band_code] = {}
                 for row in reader:
                     try:
                         code = row['code']
@@ -116,7 +116,7 @@ def read_discography():
                         if code and title:
                             album = Album(code, released, title, row['description'])
                             album.tracks = read_tracks(code)
-                            discography[band_code].append(album)
+                            discography[band_code][code] = album
                     except Exception as ex:
                         print(f"${type(ex)}: {ex} path: {path} {row}")
 
@@ -130,17 +130,35 @@ def write_albums(band_code):
     with open('data/discography/' + band_code + '.csv', 'w', encoding='utf-8', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(('code', 'released', 'name', 'description'))
-        for album in all_discography[band_code]:
+        for album in all_discography[band_code].values():
             writer.writerow((album.code, album.released.isoformat(), album.title, album.description))
 
 
 def save_album(band_code, album):
+    if not album.code:
+        album.code = generate_album_code(album)
+    all_discography[band_code][album.code] = album
     write_tracks(album.code, album.tracks)
     write_albums(band_code)
 
 
 def get_album(band_code, album_code):
-    return next(a for a in all_discography[band_code] if album_code == a.code)
+    return all_discography[band_code][album_code]
+
+
+def has_album_code(album_code):
+    for albums in all_discography.values():
+        if albums.get(album_code, None) is not None:
+            return True
+    return False
+
+
+def generate_album_code(album):
+    album_code = re.sub(r'[^a-z0-9]+', '_', album.title.lower())
+    counter = 1
+    while has_album_code(album_code):
+        album_code = album_code + str(++counter)
+    return album_code
 
 
 track_line_regex = re.compile(r'^(\d+)\.\s*(.+)\s+(\d+:\d{2})$')

@@ -5,11 +5,15 @@
             <div class="col-3 text-end">
                 <img src="{{ album.cover }}" class="rounded col-12" alt="{{ album.title }}">
             </div>
-            <div class="col-9">
+            <div class="col-8">
                 <div class="h5 mb-3">{{ band.title }}</div>
                 <div class="h4 mb-3">{{ album.title }}</div>
                 <div class="mb-3">{{ album.year }}</div>
                 <div class="mb-3">{{ album.description }}</div>
+            </div>
+            <div class="col-1">
+                <a class="btn btn-secondary btn-lg" tabindex="-1" role="button"
+                   aria-disabled="true" href="/edit/{{ band.code }}/{{ album.code }}">Edit</a>
             </div>
         </div>
         <div class="row p-2 col-12">

@@ -1,7 +1,7 @@
 from flask import Flask, url_for, redirect, request
 from flask import render_template
 
-from Album import all_discography, get_album, parse_tracks, parse_released, save_cover, save_album
+from Album import all_discography, get_album, parse_tracks, parse_released, save_cover, save_album, Album
 from Band import all_bands
 from Page import current_page_title, all_pages, Page
 
@@ -35,7 +35,7 @@ def band_page(band_code):
     except KeyError:
         return redirect(url_for('bands'))
     try:
-        discography = all_discography[band.code]
+        discography = all_discography[band.code].values()
     except KeyError:
         discography = []
 
@@ -55,7 +55,7 @@ def album_page(band_code, album_code):
         return redirect(url_for('bands'))
     try:
         album = get_album(band.code, album_code)
-    except (KeyError, StopIteration):
+    except KeyError:
         return redirect(url_for('band_page', band_code=band_code))
 
     return render_template('album_page.html',
@@ -68,15 +68,16 @@ def album_page(band_code, album_code):
                                                        '/album/' + band.code + '/' + album_code)))
 
 
+@app.route("/edit/<band_code>/")
 @app.route("/edit/<band_code>/<album_code>")
-def album_edit_page(band_code, album_code):
+def album_edit_page(band_code, album_code=''):
     try:
         band = all_bands[band_code]
     except KeyError:
         return redirect(url_for('bands'))
     try:
-        album = get_album(band.code, album_code)
-    except (KeyError, StopIteration):
+        album = get_album(band.code, album_code) if album_code else Album('')
+    except KeyError:
         return redirect(url_for('band_page', band_code=band_code))
 
     return render_template('album_edit.html',
@@ -95,15 +96,16 @@ def update_album():
     band_code = request.form['band']
     album_code = request.form['album']
     try:
-        album = get_album(band_code, album_code)
         title = request.form['title'].strip()
         description = request.form['description'].strip()
         released = parse_released(request.form['released'])
         tracks = parse_tracks(request.form['tracks'])
 
+        album = get_album(band_code, album_code) if album_code else Album('', released, title, description)
+
         cover_file = request.files.get('cover', default=None)
         if cover_file:
-            save_cover(album_code, cover_file)
+            save_cover(album.code, cover_file)
 
         album.title = title
         album.description = description
@@ -112,7 +114,7 @@ def update_album():
 
         save_album(band_code, album)
 
-        return redirect(url_for('album_page', band_code=band_code, album_code=album_code))
+        return redirect(url_for('album_page', band_code=band_code, album_code=album.code))
     except StopIteration as ex:
         #  except Exception as ex:
         print(f"ERROR: ${type(ex)}: {ex}")
