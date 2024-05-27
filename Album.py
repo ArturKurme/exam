@@ -58,11 +58,11 @@ def save_cover(album_code, cover_file):
         image.thumbnail((220, 220), Image.Resampling.LANCZOS)
         file_name = f'static/images/{album_code}_cover.png'
         image.save(file_name, "PNG")
-
-    file_name = glob.glob(file_name)[0]
+    file_name = os.path.basename(glob.glob(file_name)[0])
     for path in glob.glob(f'static/images/{album_code}_cover.*'):
-        if path != file_name:
+        if os.path.basename(path) != file_name:
             try:
+                print('remove', path)
                 os.remove(path)
             except (PermissionError, IOError):
                 pass

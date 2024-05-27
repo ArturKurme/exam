@@ -75,12 +75,59 @@ def album_edit_page(band_code, album_code=''):
         band = all_bands[band_code]
     except KeyError:
         return redirect(url_for('bands'))
+
     try:
         album = get_album(band.code, album_code) if album_code else Album('')
     except KeyError:
         return redirect(url_for('band_page', band_code=band_code))
 
+    return render_template_album_edit(band, album)
+
+
+@app.route("/save-album", methods=['POST'])
+def update_album():
+    band_code = request.form['band']
+    try:
+        band = all_bands[band_code]
+    except KeyError:
+        return redirect(url_for('bands'))
+
+    album_code = request.form['album']
+    album = None
+    try:
+        if album_code:
+            try:
+                album = get_album(band_code, album_code)
+            except KeyError:
+                return redirect(url_for('bands'))
+        else:
+            album = Album('')
+
+        album.title = request.form['title'].strip()
+        album.description = request.form['description'].strip()
+        album.released = parse_released(request.form['released'])
+        album.tracks = parse_tracks(request.form['tracks'])
+
+        if not album.title:
+            raise ValueError('"Title" must not be blank')
+        if not album.tracks:
+            raise ValueError('At least one track must be specified')
+
+        save_album(band_code, album)
+
+        cover_file = request.files.get('cover', default=None)
+        if cover_file:
+            save_cover(album.code, cover_file)
+
+        return redirect(url_for('album_page', band_code=band_code, album_code=album.code))
+    except Exception as ex:
+        print(f"ERROR: ${type(ex)}: {ex}")
+        return render_template_album_edit(band, album, error_message=str(ex))
+
+
+def render_template_album_edit(band, album, error_message=''):
     return render_template('album_edit.html',
+                           error_message=error_message,
                            title=f'Edit {album.title}',
                            band=band,
                            album=album,
@@ -89,33 +136,3 @@ def album_edit_page(band_code, album_code=''):
                                enumerate(album.tracks, start=1)),
                            nav_current='',
                            nav_items=all_pages)
-
-
-@app.route("/save-album", methods=['POST'])
-def update_album():
-    band_code = request.form['band']
-    album_code = request.form['album']
-    try:
-        title = request.form['title'].strip()
-        description = request.form['description'].strip()
-        released = parse_released(request.form['released'])
-        tracks = parse_tracks(request.form['tracks'])
-
-        album = get_album(band_code, album_code) if album_code else Album('', released, title, description)
-
-        cover_file = request.files.get('cover', default=None)
-        if cover_file:
-            save_cover(album.code, cover_file)
-
-        album.title = title
-        album.description = description
-        album.released = released
-        album.tracks = tracks
-
-        save_album(band_code, album)
-
-        return redirect(url_for('album_page', band_code=band_code, album_code=album.code))
-    except StopIteration as ex:
-        #  except Exception as ex:
-        print(f"ERROR: ${type(ex)}: {ex}")
-        return redirect(url_for('album_edit_page', band_code=band_code, album_code=album_code))
