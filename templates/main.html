@@ -1,8 +1,11 @@
 {% extends "base.html" %}
+{% block css %}
+    <link href="/static/css/main_page.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
-    <div class="p-2 h-100 d-flex justify-content-center align-items-center">
+    <div class="p-2 h-100 d-flex justify-content-center align-items-center main-bg" >
         <div class="p-2 display-2 text-center text-secondary rounded border border-secondary">
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+            <p>My favorite bands</p>
         </div>
     </div>
 {% endblock %}
