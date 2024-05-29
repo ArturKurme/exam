@@ -42,8 +42,13 @@
                 </div>
             </div>
             <input class="btn btn-primary btn-lg" type="submit" value="Save">
-            <a class="btn btn-secondary btn-lg" tabindex="-1" role="button"
-               aria-disabled="true" href="/album/{{ band.code }}/{{ album.code }}">Cancel</a>
+            {% if album.code %}
+                <a class="btn btn-secondary btn-lg" tabindex="-1" role="button"
+                    aria-disabled="true" href="/album/{{ band.code }}/{{ album.code }}">Cancel</a>
+            {% else %}
+                <a class="btn btn-secondary btn-lg" tabindex="-1" role="button"
+                     aria-disabled="true" href="/band/{{ band.code }}">Cancel</a>
+            {% endif %}
         </form>
     </div>
 {% endblock %}
